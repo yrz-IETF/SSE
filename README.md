@@ -1,4 +1,4 @@
 SSE
 ===
 
-Security Session Envelope
+Session Security Envelope
