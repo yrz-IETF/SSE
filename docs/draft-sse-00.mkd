@@ -1,0 +1,144 @@
+---
+title: Session Security Envelope
+# abbrev: sse
+docname: draft-ietf-sse-00
+date: 2013-11-26
+# date: 2013-11
+# date: 2013
+
+# stand_alone: true
+
+ipr: trust200902
+area: Security
+wg: Non-WG
+kw: Internet-Draft
+cat: std
+
+coding: us-ascii
+pi:    # can use array (if all yes) or hash here
+#  - toc
+#  - sortrefs
+#  - symrefs
+  toc: yes
+  sortrefs:   # defaults to yes
+  symrefs: yes
+
+author:
+      -
+        ins: B. Moskowitz
+        name: Bob Moskowitz
+        org: Verizon
+        phone: 
+        email: 
+      -
+        ins: I. Faynberg
+        name: Igor Faynberg
+        org: 
+        phone: 
+        email: 
+      -
+        ins: S. Harris
+        name: Susan Harris
+        org: 
+        phone: 
+        email: 
+      -
+        ins: P. Giacomin
+        name: Pierpaolo Giacomin
+        org: Freelance
+        phone: 
+        email: yrz@anche.no
+
+normative:
+#        - rfc2119
+#        - rfc2616
+#        - I-D.ietf-core-coap
+  RFC2119:
+  RFC2616:
+
+informative:
+
+entity:
+        SELF: "[RFCXXXX]"
+
+# --- note_IESG_Note
+#
+# bla bla bla
+
+--- abstract
+
+
+Abstract here, please.
+
+--- middle
+
+Introduction        {#intro}
+============
+
+Introduction here, please.
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+"SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+document are to be interpreted as described in RFC 2119, BCP 14
+{{RFC2119}} and indicate requirement levels for compliant CoAP
+implementations.
+
+In this document, the term "byte" is used in its now customary sense
+as a synonym for "octet".
+
+State Machine
+=============
+
+State machine here
+
+Security boundaries
+===================
+
+Sec boundaries here
+
+API
+===
+
+API discussion, avoid to copy data back and forth ;)
+
+
+Packet format    {#packet-format}
+=============
+
+Packet format here
+
+Packet processing    {#packet-proc}
+=================
+
+Packet processing here
+
+Crypto and conformace stuff    {#crypto}
+===========================
+
+Crypto and conformace stuff here
+
+Security considerations
+=======================
+
+This document is about a specific security solution.
+
+Acknowledgements
+================
+
+Acks
+
+--- back
+
+
+--- fluff
+
+<!--  LocalWords:  CoAP datagram CoRE WG RESTful IP ETag reassembler
+-->
+<!--  LocalWords:  blockwise idempotence statelessly keepalive SZX
+-->
+<!--  LocalWords:  acknowledgement retransmissions ACKs ACK untrusted
+-->
+<!--  LocalWords:  acknowledgements interoperability retransmission
+-->
+<!--  LocalWords:  BCP atomicity NUM WebDAV IANA
+-->
