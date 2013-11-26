@@ -1,5 +1,4 @@
 SSE
 ===
 
-Session Security Envelope
-Test.
+Session Security Envelope.
