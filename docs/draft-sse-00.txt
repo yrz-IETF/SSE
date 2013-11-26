@@ -4,7 +4,7 @@
 Non-WG                                                      B. Moskowitz
 Internet-Draft                                                   Verizon
 Intended status: Standards Track                             I. Faynberg
-Expires: May 30, 2014                                          S. Harris
+Expires: May 30, 2014                                           S. Hares
 
                                                              P. Giacomin
                                                                Freelance
@@ -682,7 +682,7 @@ Authors' Addresses
    Igor Faynberg
 
 
-   Susan Harris
+   Susan Hares
 
 
    Pierpaolo Giacomin

@@ -37,8 +37,8 @@ author:
         phone: 
         email: 
       -
-        ins: S. Harris
-        name: Susan Harris
+        ins: S. Hares
+        name: Susan Hares
         org: 
         phone: 
         email: 
