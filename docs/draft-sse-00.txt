@@ -66,16 +66,16 @@ Table of Contents
    5.  Packet format  . . . . . . . . . . . . . . . . . . . . . . . .  7
      5.1.  SSE compact format . . . . . . . . . . . . . . . . . . . .  7
      5.2.  Large format . . . . . . . . . . . . . . . . . . . . . . .  7
-     5.3.  Extreme format . . . . . . . . . . . . . . . . . . . . . .  7
-   6.  Packet processing  . . . . . . . . . . . . . . . . . . . . . .  8
-   7.  Crypto and conformace stuff  . . . . . . . . . . . . . . . . .  9
-   8.  Security considerations  . . . . . . . . . . . . . . . . . . . 10
-   9.  Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . 11
-   10. Normative References . . . . . . . . . . . . . . . . . . . . . 12
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 13
-
-
-
+     5.3.  Extreme format . . . . . . . . . . . . . . . . . . . . . .  8
+     5.4.  Fields . . . . . . . . . . . . . . . . . . . . . . . . . .  8
+   6.  Packet processing  . . . . . . . . . . . . . . . . . . . . . .  9
+   7.  Crypto and conformace stuff  . . . . . . . . . . . . . . . . . 10
+     7.1.  Sub crypto . . . . . . . . . . . . . . . . . . . . . . . . 10
+       7.1.1.  Sub sub crypto . . . . . . . . . . . . . . . . . . . . 10
+   8.  Security considerations  . . . . . . . . . . . . . . . . . . . 11
+   9.  Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . 12
+   10. Normative References . . . . . . . . . . . . . . . . . . . . . 13
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 14
 
 
 
@@ -341,7 +341,6 @@ Internet-Draft          Session Security Envelope          November 2013
 
 5.1.  SSE compact format
 
-
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -362,24 +361,25 @@ Internet-Draft          Session Security Envelope          November 2013
 
 5.2.  Large format
 
-5.3.  Extreme format
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                             SPI                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                            Lenght                             |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        Sequence Number                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                   Payload Data (Variable)                     |
+   ~                                                               ~
+   |                                                               |
+   +         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |         |             Padding ( 0-255 Bytes )                 |
+   +-+-+-+-+-+                           +-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                                     |      Pad Length*        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |            Integrity check value (ICV)                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
 
@@ -389,6 +389,62 @@ Internet-Draft          Session Security Envelope          November 2013
 
 
 Moskowitz, et al.         Expires May 30, 2014                  [Page 7]
+
+Internet-Draft          Session Security Envelope          November 2013
+
+
+5.3.  Extreme format
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                             SPI                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                            Lenght                             |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        Sequence Number                        |
+   +                                                               +
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                   Payload Data (Variable)                     |
+   ~                                                               ~
+   |                                                               |
+   +         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |         |             Padding ( 0-255 Bytes )                 |
+   +-+-+-+-+-+                           +-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                                     |      Pad Length*        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |            Integrity check value (ICV)                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+5.4.  Fields
+
+   All fields are conveyed in canonical network byte order.  Canonical
+   network byte order is fully described in RFC 791, Appendix B.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Moskowitz, et al.         Expires May 30, 2014                  [Page 8]
 
 Internet-Draft          Session Security Envelope          November 2013
 
@@ -444,7 +500,7 @@ Internet-Draft          Session Security Envelope          November 2013
 
 
 
-Moskowitz, et al.         Expires May 30, 2014                  [Page 8]
+Moskowitz, et al.         Expires May 30, 2014                  [Page 9]
 
 Internet-Draft          Session Security Envelope          November 2013
 
@@ -453,6 +509,13 @@ Internet-Draft          Session Security Envelope          November 2013
 
    Crypto and conformace stuff here
 
+7.1.  Sub crypto
+
+7.1.1.  Sub sub crypto
+
+7.1.1.1.  and more
+
+7.1.1.1.1.  and more more
 
 
 
@@ -493,14 +556,7 @@ Internet-Draft          Session Security Envelope          November 2013
 
 
 
-
-
-
-
-
-
-
-Moskowitz, et al.         Expires May 30, 2014                  [Page 9]
+Moskowitz, et al.         Expires May 30, 2014                 [Page 10]
 
 Internet-Draft          Session Security Envelope          November 2013
 
@@ -556,7 +612,7 @@ Internet-Draft          Session Security Envelope          November 2013
 
 
 
-Moskowitz, et al.         Expires May 30, 2014                 [Page 10]
+Moskowitz, et al.         Expires May 30, 2014                 [Page 11]
 
 Internet-Draft          Session Security Envelope          November 2013
 
@@ -612,7 +668,7 @@ Internet-Draft          Session Security Envelope          November 2013
 
 
 
-Moskowitz, et al.         Expires May 30, 2014                 [Page 11]
+Moskowitz, et al.         Expires May 30, 2014                 [Page 12]
 
 Internet-Draft          Session Security Envelope          November 2013
 
@@ -668,7 +724,7 @@ Internet-Draft          Session Security Envelope          November 2013
 
 
 
-Moskowitz, et al.         Expires May 30, 2014                 [Page 12]
+Moskowitz, et al.         Expires May 30, 2014                 [Page 13]
 
 Internet-Draft          Session Security Envelope          November 2013
 
@@ -724,5 +780,5 @@ Authors' Addresses
 
 
 
-Moskowitz, et al.         Expires May 30, 2014                 [Page 13]
+Moskowitz, et al.         Expires May 30, 2014                 [Page 14]
 

@@ -107,10 +107,9 @@ as a synonym for &ldquo;octet&rdquo;.</t>
 
 <section anchor="sse-compact-format" title="SSE compact format">
 
-<t>
-<figure><artwork>
+<figure>  <artwork>
  0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                             SPI                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -126,14 +125,68 @@ as a synonym for &ldquo;octet&rdquo;.</t>
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |            Integrity check value (ICV)                        |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-</artwork></figure>
-</t>
+</artwork>
+</figure>
 
 </section>
 <section anchor="large-format" title="Large format">
 
+<figure>  <artwork>
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                             SPI                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                            Lenght                             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                        Sequence Number                        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                   Payload Data (Variable)                     |
+~                                                               ~
+|                                                               |
++         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|         |             Padding ( 0-255 Bytes )                 |
++-+-+-+-+-+                           +-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                     |      Pad Length*        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|            Integrity check value (ICV)                        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</artwork>
+</figure>
+
 </section>
 <section anchor="extreme-format" title="Extreme format">
+
+<figure>  <artwork>
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                             SPI                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                            Lenght                             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                        Sequence Number                        |
++                                                               +
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                   Payload Data (Variable)                     |
+~                                                               ~
+|                                                               |
++         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|         |             Padding ( 0-255 Bytes )                 |
++-+-+-+-+-+                           +-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                     |      Pad Length*        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|            Integrity check value (ICV)                        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</artwork>
+</figure>
+
+</section>
+<section anchor="fields" title="Fields">
+
+<t>All fields are conveyed in canonical network byte order. 
+Canonical network byte order is fully described in RFC 791, Appendix B.</t>
 
 </section>
 </section>
@@ -146,6 +199,18 @@ as a synonym for &ldquo;octet&rdquo;.</t>
 
 <t>Crypto and conformace stuff here</t>
 
+<section anchor="sub-crypto" title="Sub crypto">
+
+<section anchor="sub-sub-crypto" title="Sub sub crypto">
+
+<section anchor="and-more" title="and more">
+
+<section anchor="and-more-more" title="and more more">
+
+</section>
+</section>
+</section>
+</section>
 </section>
 <section anchor="security-considerations" title="Security considerations">
 
