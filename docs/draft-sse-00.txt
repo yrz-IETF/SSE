@@ -4,7 +4,9 @@
 Non-WG                                                      B. Moskowitz
 Internet-Draft                                                   Verizon
 Intended status: Standards Track                             I. Faynberg
-Expires: May 30, 2014                                           S. Hares
+Expires: May 30, 2014                                              H. Lu
+                                                          Alcatel-Lucent
+                                                                S. Hares
 
                                                              P. Giacomin
                                                                Freelance
@@ -47,14 +49,16 @@ Copyright Notice
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
    include Simplified BSD License text as described in Section 4.e of
-   the Trust Legal Provisions and are provided without warranty as
-   described in the Simplified BSD License.
 
 
 
 Moskowitz, et al.         Expires May 30, 2014                  [Page 1]
 
 Internet-Draft          Session Security Envelope          November 2013
+
+
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
 
 
 Table of Contents
@@ -76,10 +80,6 @@ Table of Contents
    9.  Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . 12
    10. Normative References . . . . . . . . . . . . . . . . . . . . . 13
    Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 14
-
-
-
-
 
 
 
@@ -420,8 +420,8 @@ Internet-Draft          Session Security Envelope          November 2013
 5.4.  Fields
 
    All fields are conveyed in canonical network byte order.  Canonical
-   network byte order is fully described in RFC 791, Appendix B.
-
+   network byte order is fully described in RFC 791, Appendix
+   B[RFC0791].
 
 
 
@@ -675,14 +675,14 @@ Internet-Draft          Session Security Envelope          November 2013
 
 10.  Normative References
 
+   [RFC0791]  Postel, J., "Internet Protocol", STD 5, RFC 791,
+              September 1981.
+
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
 
-   [RFC2616]  Fielding, R., Gettys, J., Mogul, J., Frystyk, H.,
-              Masinter, L., Leach, P., and T. Berners-Lee, "Hypertext
-              Transfer Protocol -- HTTP/1.1", RFC 2616, June 1999.
 
-   -- fluff
+
 
 
 
@@ -736,6 +736,11 @@ Authors' Addresses
 
 
    Igor Faynberg
+   Alcatel-Lucent
+
+
+   Huilan Lu
+   Alcatel-Lucent
 
 
    Susan Hares
@@ -745,11 +750,6 @@ Authors' Addresses
    Freelance
 
    Email: yrz@anche.no
-
-
-
-
-
 
 
 
