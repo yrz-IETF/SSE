@@ -1,0 +1,560 @@
+
+
+
+Non-WG                                                      B. Moskowitz
+Internet-Draft                                                   Verizon
+Intended status: Standards Track                             I. Faynberg
+Expires: May 30, 2014                                         L. Hui-Lan
+                                                                S. Hares
+
+                                                             P. Giacomin
+                                                               Freelance
+                                                       November 26, 2013
+
+
+                       Session Security Envelope
+                           draft-ietf-sse-00
+
+Abstract
+
+   Abstract here, please.
+
+Status of this Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at http://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on May 30, 2014.
+
+Copyright Notice
+
+   Copyright (c) 2013 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (http://trustee.ietf.org/license-info) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+
+
+
+Moskowitz, et al.         Expires May 30, 2014                  [Page 1]
+
+Internet-Draft          Session Security Envelope          November 2013
+
+
+   described in the Simplified BSD License.
+
+
+Table of Contents
+
+   1.  Introduction . . . . . . . . . . . . . . . . . . . . . . . . .  3
+   2.  Problem Statement  . . . . . . . . . . . . . . . . . . . . . .  4
+   3.  API  . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  6
+   4.  Security considerations  . . . . . . . . . . . . . . . . . . .  7
+   5.  Acknowledgements . . . . . . . . . . . . . . . . . . . . . . .  8
+   6.  Normative References . . . . . . . . . . . . . . . . . . . . .  9
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 10
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Moskowitz, et al.         Expires May 30, 2014                  [Page 2]
+
+Internet-Draft          Session Security Envelope          November 2013
+
+
+1.  Introduction
+
+   Introduction here, please.
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in RFC 2119, BCP 14
+   [RFC2119] and indicate requirement levels for compliant CoAP
+   implementations.
+
+   In this document, the term "byte" is used in its now customary sense
+   as a synonym for "octet".
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Moskowitz, et al.         Expires May 30, 2014                  [Page 3]
+
+Internet-Draft          Session Security Envelope          November 2013
+
+
+2.  Problem Statement
+
+   Since its early design days, the Internet has bypassed the session
+   layer (i.e., layer 5 of the OSI model), in which the end-to-end
+   context of communications among application processes is managed.
+   That was a solid design decision, but it was based on the needs of
+   envisioned applications and it took in account the then current
+   structure of the Internet.  As the Internet evolved, the problem of
+   tight coupling of the inter-process communications to underlying
+   protocols was becoming evident, but it remained manageable chiefly
+   through ad-hoc solutions.  The evolution of the Internet has been
+   two-pronged and, following Vint Cerf's famous maxims, it could be
+   summarized as "IP-on-everything," and "Everything-over-IP."  As far
+   as "Everything-over-IP" development is concerned, the issues of
+   communication persistence, re-start and check-pointing-as well as the
+   client's ability to connect to multiple IP addresses in order to
+   reach the same service-have been dealt with by applications
+   themselves.  And the rich and ever-growing variety of the Internet
+   applications has in turn demanded multiplicity of new application
+   protocols to meet the demands of the Web access, media session
+   control, real-time media sessions transport, messaging, etc.  To this
+   end, even some application protocols that had been initially
+   considered adequate for their respective tasks had to be replaced
+   with the new protocols as the tasks were redefined.  Yet, all these
+   protocols had to re-implement, time and again, an essentially
+   invariant session layer abstraction, being further constrained by the
+   underlying communication context and inherent dependence on the lower
+   layers.  This dependence manifests itself most acutely when one
+   considers its security implications.  Particularly from the end-to-
+   end security point of view, this situation has posed a range of
+   problems in the cases where:
+
+   1.  A "wrong"' layer ends up being secured in that the wrong risks
+       and liabilities are being addressed;
+
+   2.  The application has to work across multiple and different
+       transport layer protocols;
+
+   3.  The security association (and hence the application) cannot
+       survive the break-down in lower layers or an attack carried
+       against them;
+
+   4.  The process of establishing new security associations after a
+       host failure is unacceptably slow to meet the demands of emerging
+       environments (such as NFV and SDN) for high-availability; and
+
+   5.  The underlying layer is not TCP or UDP or SCTP as is the case in
+       Short-Messaging Services.
+
+
+
+Moskowitz, et al.         Expires May 30, 2014                  [Page 4]
+
+Internet-Draft          Session Security Envelope          November 2013
+
+
+   The realization of the "IP-on-Everything" vision has brought yet
+   another essential factor to consider: the highly-constrained data
+   links.  The constraints are not only monetary: while cellular SMS is
+   known for significant per-byte cost, other links (such as IEEE
+   802.15.4k or 802.15.6) are energy-constrained.  This fairly new
+   development has not been met by the existing security protocols,
+   which were not designed to address the constraints here.  One danger-
+   unfortunately often realized-is that security is intentionally turned
+   off to reduce the expense.
+   The good news is that none of the above problems is inherent to the
+   Internet, and they can be successfully addressed by introducing-if
+   only for the sake of security-the session layer and implementing a
+   security protocol at that layer in the manner completely independent
+   of the underlying context.  In particular, we demonstrate that such a
+   session security protocol minimizes over-the-air-byte cost for
+   highly-constrained networks while providing both the unicast and
+   multicast support.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Moskowitz, et al.         Expires May 30, 2014                  [Page 5]
+
+Internet-Draft          Session Security Envelope          November 2013
+
+
+3.  API
+
+   API discussion, avoid to copy data back and forth ;)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Moskowitz, et al.         Expires May 30, 2014                  [Page 6]
+
+Internet-Draft          Session Security Envelope          November 2013
+
+
+4.  Security considerations
+
+   This document is about a specific security solution.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Moskowitz, et al.         Expires May 30, 2014                  [Page 7]
+
+Internet-Draft          Session Security Envelope          November 2013
+
+
+5.  Acknowledgements
+
+   Acks
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Moskowitz, et al.         Expires May 30, 2014                  [Page 8]
+
+Internet-Draft          Session Security Envelope          November 2013
+
+
+6.  Normative References
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119, March 1997.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Moskowitz, et al.         Expires May 30, 2014                  [Page 9]
+
+Internet-Draft          Session Security Envelope          November 2013
+
+
+Authors' Addresses
+
+   Bob Moskowitz
+   Verizon
+
+
+   Igor Faynberg
+
+
+   Lu Hui-Lan
+
+
+   Susan Hares
+
+
+   Pierpaolo Giacomin
+   Freelance
+
+   Email: yrz@anche.no
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Moskowitz, et al.         Expires May 30, 2014                 [Page 10]
+

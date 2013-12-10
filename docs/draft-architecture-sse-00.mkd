@@ -1,0 +1,132 @@
+---
+title: Session Security Envelope
+# abbrev: sse
+docname: draft-ietf-sse-00
+date: 2013-11-26
+# date: 2013-11
+# date: 2013
+
+# stand_alone: true
+
+ipr: trust200902
+area: Security
+wg: Non-WG
+kw: Internet-Draft
+cat: std
+
+coding: us-ascii
+pi:    # can use array (if all yes) or hash here
+#  - toc
+#  - sortrefs
+#  - symrefs
+  toc: yes
+  sortrefs:   # defaults to yes
+  symrefs: yes
+
+author:
+      -
+        ins: B. Moskowitz
+        name: Bob Moskowitz
+        org: Verizon
+        phone: 
+        email: 
+      -
+        ins: I. Faynberg
+        name: Igor Faynberg
+        org: 
+        phone: 
+        email: 
+      -
+        ins: L. Hui-Lan
+        name: Lu Hui-Lan
+        org: 
+        phone: 
+        email: 
+      -
+        ins: S. Hares
+        name: Susan Hares
+        org: 
+        phone: 
+        email: 
+      -
+        ins: P. Giacomin
+        name: Pierpaolo Giacomin
+        org: Freelance
+        phone: 
+        email: yrz@anche.no
+
+normative:
+#        - rfc2119
+#        - I-D.ietf-core-coap
+  RFC2119:
+
+informative:
+
+entity:
+        SELF: "[RFCXXXX]"
+
+# --- note_IESG_Note
+#
+# bla bla bla
+
+--- abstract
+
+
+Abstract here, please.
+
+--- middle
+
+Introduction        {#intro}
+============
+
+Introduction here, please.
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+"SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+document are to be interpreted as described in RFC 2119, BCP 14
+{{RFC2119}} and indicate requirement levels for compliant CoAP
+implementations.
+
+In this document, the term "byte" is used in its now customary sense
+as a synonym for "octet".
+
+Problem Statement
+=================
+
+Since its early design days, the Internet has bypassed the session layer (i.e., layer 5 of the OSI model), in which the end-to-end context of communications among application processes is managed.  That was a solid design decision, but it was based on the needs of envisioned applications and it took in account the then current structure of the Internet. 
+As the Internet evolved, the problem of tight coupling of the inter-process communications to underlying protocols was becoming evident, but it remained manageable chiefly through ad-hoc solutions. The evolution of the Internet has been two-pronged and, following Vint Cerf's famous maxims, it could be summarized as "IP-on-everything," and "Everything-over-IP."
+As far as "Everything-over-IP" development is concerned, the issues of communication persistence, re-start and check-pointing-as well as the client's ability to connect to multiple IP addresses in order to reach the same service-have been dealt with by applications themselves. And the rich and ever-growing variety of the Internet applications has in turn demanded multiplicity of new application protocols to meet the demands of the Web access, media session control, real-time media sessions transport, messaging, etc. To this end, even some application protocols that had been initially considered adequate for their respective tasks had to be replaced with the new protocols as the tasks were redefined. Yet, all these protocols had to re-implement, time and again, an essentially invariant session layer abstraction, being further constrained by the underlying communication context and inherent dependence on the lower layers. This dependence manifests itself most acutely when one considers its security implications.
+Particularly from the end-to-end security point of view, this situation has posed a range of problems in the cases where:
+
+1. A "wrong"' layer ends up being secured in that the wrong risks and liabilities are being addressed;
+
+2. The application has to work across multiple and different transport layer protocols;
+
+3. The security association (and hence the application) cannot survive the break-down in lower layers or an attack carried against them; 
+
+4. The process of establishing new security associations after a host failure is unacceptably slow to meet the demands of emerging environments (such as NFV and SDN) for high-availability; and
+
+5. The underlying layer is not TCP or UDP or SCTP as is the case in Short-Messaging Services.
+
+The realization of the "IP-on-Everything" vision has brought yet another essential factor to consider: the highly-constrained data links. The constraints are not only monetary: while cellular SMS is known for significant per-byte cost, other links (such as IEEE 802.15.4k or 802.15.6) are energy-constrained. This fairly new development has not been met by the existing security protocols, which were not designed to address the constraints here. One danger-unfortunately often realized-is that security is intentionally turned off to reduce the expense.  
+The good news is that none of the above problems is inherent to the Internet, and they can be successfully addressed by introducing-if only for the sake of security-the session layer and implementing a security protocol at that layer in the manner completely independent of the underlying context. In particular, we demonstrate that such a session security protocol minimizes over-the-air-byte cost for highly-constrained networks while providing both the unicast and multicast support.
+
+#API
+
+API discussion, avoid to copy data back and forth ;)
+
+#Security considerations
+
+This document is about a specific security solution.
+
+#Acknowledgements
+
+Acks
+
+--- back
+
+
+<!--  LocalWords:  SSE
+-->
+<!--  LocalWords:  BCP IANA
+-->
