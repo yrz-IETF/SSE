@@ -51,10 +51,10 @@ author:
 
 normative:
 #        - rfc2119
-#        - rfc2616
+#        - rfc791
 #        - I-D.ietf-core-coap
+  RFC791:
   RFC2119:
-  RFC2616:
 
 informative:
 
@@ -179,7 +179,7 @@ API discussion, avoid to copy data back and forth ;)
 ## Fields
 
 All fields are conveyed in canonical network byte order. 
-Canonical network byte order is fully described in RFC 791, Appendix B.
+Canonical network byte order is fully described in RFC 791, Appendix B{{RFC0791}}.
 
 Packet processing    {#packet-proc}
 =================
@@ -211,15 +211,7 @@ Acks
 --- back
 
 
---- fluff
-
-<!--  LocalWords:  CoAP datagram CoRE WG RESTful IP ETag reassembler
+<!--  LocalWords:  SSE
 -->
-<!--  LocalWords:  blockwise idempotence statelessly keepalive SZX
--->
-<!--  LocalWords:  acknowledgement retransmissions ACKs ACK untrusted
--->
-<!--  LocalWords:  acknowledgements interoperability retransmission
--->
-<!--  LocalWords:  BCP atomicity NUM WebDAV IANA
+<!--  LocalWords:  BCP IANA
 -->
