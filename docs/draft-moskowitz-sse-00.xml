@@ -1,0 +1,417 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [ 
+<!ENTITY RFC791 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.0791.xml">
+<!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC4949 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4949.xml">
+]>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+ <?rfc toc="yes" ?>
+ <?rfc symrefs="yes" ?>
+ <?rfc sortrefs="yes"?> 
+ <?rfc compact="yes" ?>
+ <?rfc subcompact="no" ?>  
+ <?rfc iprnotified="no" ?>
+  <?rfc strict="no" ?>
+
+<rfc category="std" docName="draft-moskowitz-sse-00" ipr="trust200902">
+
+ 
+  <front>
+    
+<title abbrev="Session Security Envelope">Session Security Envelope</title>
+     <author fullname="Bob Moskowitz" initials="B" surname="Moskowitz" >
+      <organization>HTT Consulting</organization>
+      <address>
+	    <postal> 
+		<street> </street>
+		<city>Oak Park</city>
+		<region>MI</region>
+		<code>48237</code> 
+		</postal>
+        <email>rgm@labs.htt-consult.com</email>
+      </address>
+    </author>
+	  <author fullname="Igor Faynberg" initials="I" surname="Faynberg">
+      <organization>Alcatel-Lucent</organization>
+      <address>
+		  <postal> 
+          <street>Room 2D-144, 600 Mountain Avenue </street>
+          <city>Murray Hill</city>
+          <region>NJ</region>
+          <code>07974</code>
+          <country>USA</country>
+        </postal>
+		  <email> igor.faynberg@alcatel-lucent.com</email>
+      </address>
+	  </author>
+	  <author fullname="Huilan Lu " initials="H" surname="Lu">
+      <organization>Alcatel-Lucent</organization>
+      <address>
+	      <postal> 
+          <street>Room 2D-144, 600 Mountain Avenue </street>
+          <city>Murray Hill</city>
+          <region>NJ</region>
+          <code>07974</code>
+          <country>USA</country>
+        </postal>
+        <email></email>
+      </address>
+    </author>
+	  <author fullname="Susan Hares" initials="S" surname="Hares">
+      <organization>Hickory Hill Consulting</organization>
+      <address>
+        <postal> 
+          <street>7453 Hickory Hill</street>
+          <!-- Reorder these if your country does things differently -->
+          <city>Saline</city>
+          <region>MI</region>
+          <code>48176</code>
+          <country>USA</country>
+        </postal>
+        <email>shares@ndzh.com</email>
+      </address>
+    </author>
+		  <author fullname="Pierpaolo Giacomin" initials="P" surname="Giacomin">
+      <organization>FreeLance</organization>
+      <address>
+        <email>yrz@anche.no</email>
+      </address>
+    </author>
+<date year="2015" />
+   <area>Security Area</area>
+   <workgroup>SSE BOF</workgroup>
+    <keyword>RFC</keyword>
+     <keyword>Request for Comments</keyword>
+     <keyword>I-D</keyword>
+     <keyword>Internet-Draft</keyword>
+     <keyword>SSE</keyword>
+
+<abstract>
+          
+	 <t>This memo specifies the details of the Session Security Envelope
+   (SSE).  SSE is a session protocol aiming to guarantee  
+   confidentiality, integrity and authentication completely
+   independently by the underlying context, namely network and transport
+   layers. A single session using the SEE protocol can 
+   include a single transport session or multiple transport sessions. 
+   This mean that SSE can survive the break-down in network and
+   transport layers or to attacks carried against them. SSE is also applicable
+   in networks lacking in classic inter-networking and transport protocols
+   SSE relies on modern AEAD block cipher modes of operations, a class
+   of block cipher modes which allows, at the same time, to authenticate
+   the message while encrypting a part of it.  
+   </t>
+   
+</abstract>
+</front>
+<middle>
+    
+<section anchor="intro" title="Introduction">
+   <t>This memo specifies the details of the Session Security Envelope
+   (SSE). SSE is a session protocol aiming to guarantee confidentiality,
+   integrity and authentication completely independently by the underlying
+   context, namely network and transport layers. A single SSE session can
+   span a single transport session or multiple transport sessions.  These
+   transport sessions can use the same transport layer protocol (E.g. TCP) or 
+   use different transport protocols.  SSE can survive the break-down
+   in network and transport layers or to attacks
+   carried against them.  Moreover SSE will relies on modern AEAD block
+   cipher modes of operations, a class of block cipher modes which allows,
+   at the same time, to authenticate the message while encrypting a part of it.</t> 
+</section> 
+    
+<section anchor="terms" title="Terms and Definitions">
+<t></t>
+<section title="Requirements Terminology">
+   <t>  The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in RFC 2119, BCP 14
+   [RFC2119] and indicate requirement levels for compliant CoAP. </t>
+</section>
+ <section title="Notations">
+ <t> This section will contain notations </t> 
+ </section> 
+ <section title="Definitions"> 
+ <t> AEAD Block Cypher: (definition needed) </t> 
+ <t> SSE; Session Specific Envelope </t> 
+ </section> 
+</section> 
+<section title="SSL Security Boundary">
+<t>The security boundary comes at layer above the IP transport layers (TCP, STCP, DTLS). 
+This security allows the data to be secure prior to entering into a specific transport layer. 
+A single SSE session can span 1 or N transport protocol connections.  The multiple 
+transport connections running under an SSE session may all use one protocol (e.g. TCP)
+or multiple protocols (e.g. TCP, STCP, DTLS). The higher layer security boundary
+ provides a common security layer.   
+</t>
+</section> 
+<section title="API">
+<t> 
+The initial API is part of a shim with socket call over a TCP socket. </t>
+<t> s = int socket(int domain, int type, int protocol) </t> 
+<t>where: </t>
+<t><list>
+<t> domain: AF_INET and AF_INET6 supported </t>
+<t> type: SOCK_SECURE</t> 
+<t> protocol:  Transport protocol (TCP (6), UDP (6), SCTP (132)) </t>
+</list>
+</t> 
+<t> 
+<figure>
+<artwork>
+
+  int setsockopt(int sockfd, int level, int optname,
+             const void *optval, socklen_t optlen); 
+
+ int getsocketopt(int sockfd, int level, int optname
+                    const void *optval, socket			 
+  where: 
+   sockfd:      # socket file descriptor    
+   optname:     # option name (see below) 
+   optval;		# points to *sse_transport structure;  
+   optlen;		# length of option 
+   
+   optval values: 
+   ADD_SSE_Transport[1];   # add transport to SSE
+   DELETE_SSE_Transport[2]; # delete transport to SSE
+   Query_SSE_Transport [3];  # Query transport 
+   
+   optval	 *sse_transport[MAX_SSE_TRANSPORTS]; - for add/deletes
+
+   
+  struct *sse_add_transport 
+	 int nt_sockfd;   # new transport socket
+	 int protocol;    # new protocol
+	 ); 
+  
+  struct 
+
+int getsockopt(int sockfd, int level, int optname, void *optval, socklen_t *optlen);
+
+int setsockopt(int sockfd, int level, int optname,
+             const void *optval, socklen_t optlen);
+			 
+			 Figure 1 - Example SSE Socket API 
+
+</artwork>
+</figure>
+</t> 
+<t> Note: The prototype for this SECURE_SOCKET is on a FREEBSD OS. </t>
+</section> 
+<section title="Packet format"> 
+<t> 
+An SSE PDU is a Session Layer PDU (SPDU).  In order to accommodate
+various use cases three formats are available for the PDU.  The only 
+difference between those formats is the size of length and sequence
+number fields.  Following these fields is the encrypted payload and
+Integrity Check Value (ICV).  Encrypted payload and ICV has a
+substructure depending on the choice of encryption algorithm and mode.
+</t>
+<section title="SSE compact format">
+<t>
+SSE compact format aims to provide a Session Security Layer to
+applications leveraging on constrained network media with packet size
+limitations or high cost per bit transport.
+</t> 
+<t> In the SSE compact format:</t>
+<t> SPI is 32 bits. </t> 
+<t> Length is 12 bits </t>
+<t> Sequence Number is 20 bits </t> 
+<t> 12 bits of Length allows (2^12) 4096 bytes in the Encrypted Payload
+   (does not include the ICV). 20 bits in the Sequence Number allows to
+   send (2^20) 1048576 packets before renegotiating the key.
+   (The ICV length is set by the KMP parameters, so the length is known 
+    and therefore is not included in the length calculation) 
+</t> 
+<figure>       
+ <artwork>
+     0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                             SPI                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |       Length          |             Sequence Number           |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |              Encrypted Payload and ICV (Variable)             |
+   ~                                                               ~
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   
+   Figure 2 - Compact format
+</artwork>     
+</figure>
+<t></t>
+</section> 
+<section title="SSE Large Format">
+<t>
+SSE large format aims provide a Session Security Layer to
+applications which have common sizes of transport packets.   
+</t> 
+<t> In the SSE compact format:</t>
+<t> SPI is 32 bits. </t> 
+<t> Length is 32 bits </t>
+<t> Sequence Number is 32 bits </t> 
+<t> 32 bits of Length allows (2^32)or ~4Gbytes in the
+   Encrypted Payload (does not include the ICV). 32 bits in the Sequence
+   Number allows to send (2^32) ~40 billion packets packets before renegotiating the key.
+</t> 
+<t> The 32 bits of length allows an IPv6 jumbogram to be included as
+    in the SSE Large Format Payload </t> 
+<figure> 
+<artwork>
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                             SPI                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                            Length                             |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        Sequence Number                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |              Encrypted Payload and ICV (Variable)             |
+   ~                                                               ~
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+    
+   
+     Figure 3 - Large Format
+</artwork>
+</figure> 
+</section>
+<section title="SSE Extreme Format">
+<t>
+SSE large format aims provide a Session Security Layer to high
+performance networks.
+</t> 
+<t> In the SSE compact format:</t>
+<t> SPI is 32 bits. </t> 
+<t> Length is 32 bits </t>
+<t> Sequence Number is 64 bits </t> 
+<t> 
+   32 bits of Length allows (2^32) 4294967296 bytes (4Gbytes) in the
+   Encrypted Payload (excluding the ICV). 32 bits in the Sequence
+   Number allows to send (2^64) 18446744073709551616 (around 18 * 10^18)
+   packets before renegotiating the key.
+ 
+</t> 
+<figure> 
+<artwork>
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                             SPI                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                            Length                            |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        Sequence Number                        |
+   +                                                               +
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |              Encrypted Payload and ICV (Variable)             |
+   ~                                                               ~
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   
+        Figure 4 -  Extreme Format
+</artwork>
+</figure> 
+</section>
+<section title="Header Fields">
+<t> SPI is the Security Parameter Index, a 32 bit number received from the external KMP. 
+It is the index into the Security Association and is typically unidirectional.  That is each
+direction in has its own SPI.  A KMP for a unicast communication would provide the two SPIs.
+Multicast is different. Depending on the requirements, there can be one SPI for all transmitters
+or one per transmitter.</t>
+<t> Length is the length in bytes of the encrypted payload. This does not include the ICV.  The
+    length of the ICV depends on the block cipher settings.
+</t>
+
+<t>
+Sequence Number is a, strictly increasing by 1, counter.  When the field cannot be increased 
+without wrapping a key renegotiation MUST be performed.  Please note that this Sequence Number has
+not the same meaning and implications of a Transport Layer sequence number, hence increasing by 1 is
+a good idea. </t> <t> Note: It is common practice to rekey some time BEFORE the number space is exhausted.
+</t> 
+</section>
+<section title="AEAD integration"> 
+<t>   SSE MUST use AEAD block cipher modes.  AEAD block cypher modes will
+   ensure confidentiality on the payload and integrity of both the
+   payload and the headers (SPI, length and sequence number).</t>
+</section>
+</section> 
+<section title="Packet processing and State Machine" >
+<t>
+   SSE will spawn across several ports and protocols, hence each
+   listened port and protocol can be a different SSE instance.  See
+   Architecture Draft. </t>
+<section title=" Establishing a session"> 
+<t> 
+   An application can establish a session via the SSE API,
+   which in turn will interact with a KMP daemon.  SSE instance will get
+   all parameters related to the session from the KMP daemon. </t> 
+   <t> Editorial note: Is this a local vulnerability?</t>
+</section>
+<section title="Processing Outgoing Application Data"> 
+<t> 
+   After having established an SSE session, an application can send application-
+   level data using the normal socket calls.  The SSE layer will encapsulate
+   the packet, and send it on the appropriate transport session. The application doesn't need
+   to know SPI, sequence number or key.  The local SSE knows these facts, and
+   keeps it within the SSE data associated with a set of transport connections.    
+   </t> 
+</section>
+<section title="Processing Incoming Application Data "> 
+<t> 
+   After having established an SSE session, the packets will be sent to the transport
+   layer for de-encapsulation.  After header removal, the socket processing 
+   will hand it to the SEE processing for security check. If the packet is deemed
+   secure, the socket will remove the SSE envelope. The application see the
+   byte stream as data from a transport connection. </t>
+<t> The application doesn't need to know SPI, sequence number
+   or key, relying on a fake connection. (but its local SSE instance
+   knows it, hence the application own memory where those are stored)
+</t> 
+</section>
+</section> 
+<section anchor="IANA" title="IANA Considerations">
+      <t>TBD. </t>
+    </section>
+
+ <section title="Security Considerations">
+
+<t>As SSE uses an AEAD block cipher, it is vulnerable to 
+attack if a sequence number is reused for a given key.  
+Thus implementations of SSE MUST provide for rekeying prior
+to Sequence Number rollover.  An implementation should never assume
+that for a given context, the sequence number space will never be exhausted.
+Key Management Protocols like IKEv2 [RFC 4306] or HIP [RFC 7401] could be used
+to provide for rekeying management.  The KMP SHOULD not create a network layer
+fate-sharing limitation. </t> 
+
+<t> As any security protocol can be used for a resource exhaustion attack, implementations
+should consider methods to mitigate flooding attacks of messages with valid
+SPIs but invalid content.  Even with the ICV check, resources are still
+consumed to validate the ICV. </t> 
+
+<t> SSE makes no attempt to recommend the ICV length.  For constrained network implementations,
+other sources should guide the implementation as to ICV length selection.  The ICV length
+selection SHOULD be the the responsibility of the KMP.</t> 
+
+<t> As with any layered security protocol, SSE makes no claims of protecting lower
+or higher processes in the communication stack. Each layer's risks and liabilities
+need be addressed at that level.
+</t>
+    
+</section>
+  
+</middle>
+<back>
+   <references title="Normative References">
+      &RFC791;
+      &RFC2119;
+    </references>
+ <references title="Informative References">
+   &RFC4949;
+   </references>   
+</back>
+</rfc>
